@@ -6,38 +6,92 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import axios from "axios";
 
 const register = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const handleRegister = () => {
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    axios
+      .post("http://localhost:3000/register", user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert(
+          "Registration successfull",
+          "You have been registered succesfully"
+        );
+        setEmail("");
+        setPassword("");
+        setName("");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Registration failed",
+          "an error ocurred during registration"
+        );
+        console.log("error", error);
+      });
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
       <View style={{ marginTop: 80 }}>
-        <Text style={{ fontSize: 18, fontWeight: "600", color: "#318CE7" }}>
+        <Text style={{ fontSize: 18, fontWeight: "600", color: "#0066b2" }}>
           TODO-LIST TRACKER
         </Text>
       </View>
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "600",
-              marginTop: 20,
-            }}
-          >
-            Register to your account
+          <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 20 }}>
+            register to your account
           </Text>
         </View>
+
         <View style={{ marginTop: 70 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              backgroundColor: "#E0E0E0",
+              paddingVertical: 5,
+              borderRadius: 5,
+              marginTop: 30,
+            }}
+          >
+            <Ionicons
+              style={{ marginLeft: 8 }}
+              name="person"
+              size={24}
+              color="gray"
+            />
+            <TextInput
+              value={name}
+              onChangeText={(text) => setName(text)}
+              style={{
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: email ? 17 : 17,
+              }}
+              placeholder="enter your name"
+            />
+          </View>
           <View
             style={{
               flexDirection: "row",
@@ -64,7 +118,7 @@ const register = () => {
                 width: 300,
                 fontSize: email ? 17 : 17,
               }}
-              placeholder="Enter your email"
+              placeholder="enter your email"
             />
           </View>
 
@@ -95,12 +149,14 @@ const register = () => {
                 width: 300,
                 fontSize: email ? 17 : 17,
               }}
-              placeholder="Enter your password"
+              placeholder="enter your password"
             />
           </View>
 
           <View style={{ marginTop: 60 }} />
+
           <Pressable
+            onPress={handleRegister}
             style={{
               width: 200,
               backgroundColor: "#6699CC",
@@ -121,12 +177,13 @@ const register = () => {
               Register
             </Text>
           </Pressable>
+
           <Pressable
             onPress={() => router.replace("/login")}
             style={{ marginTop: 15 }}
           >
             <Text style={{ textAlign: "center", fontSize: 15, color: "gray" }}>
-              Already have an account? Login
+              Already have an account? sign Up
             </Text>
           </Pressable>
         </View>
