@@ -7,36 +7,59 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          router.replace("/(tabs)/home");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkLoginStatus();
+  }, []);
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+    };
+
+    axios.post("http://localhost:3000/login", user).then((response) => {
+      const token = response.data.token;
+      console.log("token", token);
+      AsyncStorage.setItem("authToken", token);
+      router.replace("/(tabs)/home");
+    });
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
       <View style={{ marginTop: 80 }}>
-        <Text style={{ fontSize: 18, fontWeight: "600", color: "#318CE7" }}>
+        <Text style={{ fontSize: 18, fontWeight: "600", color: "#0066b2" }}>
           TODO-LIST TRACKER
         </Text>
       </View>
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "600",
-              marginTop: 20,
-            }}
-          >
-            Login to your account
+          <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 20 }}>
+            Log in to your account
           </Text>
         </View>
+
         <View style={{ marginTop: 70 }}>
           <View
             style={{
@@ -64,7 +87,7 @@ const login = () => {
                 width: 300,
                 fontSize: email ? 17 : 17,
               }}
-              placeholder="Enter your email"
+              placeholder="enter your email"
             />
           </View>
 
@@ -95,9 +118,10 @@ const login = () => {
                 width: 300,
                 fontSize: email ? 17 : 17,
               }}
-              placeholder="Enter your password"
+              placeholder="enter your password"
             />
           </View>
+
           <View
             style={{
               flexDirection: "row",
@@ -106,13 +130,16 @@ const login = () => {
               justifyContent: "space-between",
             }}
           >
-            <Text>Keep me logged in </Text>
+            <Text>Keep me logged in</Text>
             <Text style={{ color: "#007FFF", fontWeight: "500" }}>
               Forgot Password
             </Text>
           </View>
+
           <View style={{ marginTop: 60 }} />
+
           <Pressable
+            onPress={handleLogin}
             style={{
               width: 200,
               backgroundColor: "#6699CC",
@@ -133,6 +160,7 @@ const login = () => {
               Login
             </Text>
           </Pressable>
+
           <Pressable
             onPress={() => router.replace("/register")}
             style={{ marginTop: 15 }}

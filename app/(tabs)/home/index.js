@@ -6,11 +6,15 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-
+import { BottomModal } from "react-native-modals";
+import { ModalTitle,ModalContent} from 'react-native-modals';
+import { SlideAnimation } from 'react-native-modals'
 const index = () => {
   const todos = [];
+  const [isModalVisible, setModalVisisble] = useState(false);
+  const [todo, setTodo ] = useState("");
   return (
     <>
       <View
@@ -102,6 +106,31 @@ const index = () => {
           )}
         </View>
       </ScrollView>
+
+      <BottomModal onBackdropPress={() => setModalVisisble(!isModalvisible)}
+        onHardwareBackPress = {() => setModalVisisble(!isModalvisible)}
+        swipeDirection = {["up", "down"]}
+        swipeThreshold = {200}
+        modalTittle = {<ModalTitle title=" Add todo" />}
+        modalAnimation =
+        {
+          new SlideAnimation({
+            slideFrom: "bottom",
+          })
+        }
+        visible = {isModalvisible}
+        onTouchOutside = {() => setModalVisisble(!isModalVisible)}
+         >
+        <ModalContent style = {{width: "100%",height:200}}>
+        <View>
+            <TextInput 
+            value={todo} 
+            onChangeText = {(text) => setTodo("text")} 
+            placeholder ="Input a new task here"
+            />
+        </View>
+        </ModalContent>
+      </BottomModal>
     </>
   );
 };

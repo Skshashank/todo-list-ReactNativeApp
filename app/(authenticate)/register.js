@@ -71,7 +71,7 @@ const register = () => {
               backgroundColor: "#E0E0E0",
               paddingVertical: 5,
               borderRadius: 5,
-              marginTop: 30,
+              marginTop: 20,
             }}
           >
             <Ionicons
@@ -100,7 +100,7 @@ const register = () => {
               backgroundColor: "#E0E0E0",
               paddingVertical: 5,
               borderRadius: 5,
-              marginTop: 30,
+              marginTop: 20,
             }}
           >
             <MaterialIcons
@@ -130,7 +130,7 @@ const register = () => {
               backgroundColor: "#E0E0E0",
               paddingVertical: 5,
               borderRadius: 5,
-              marginTop: 30,
+              marginTop: 20,
             }}
           >
             <AntDesign
